@@ -9619,6 +9619,15 @@ var App = function (_Component) {
         this.removeImage();
         if (this.won()) {
           clearInterval(this.interval);
+          var bestTime = localStorage.getItem('bestTime');
+          if (bestTime) {
+            bestTime = parseInt(bestTime);
+            if (this.state.time < bestTime) {
+              localStorage.setItem('bestTime', this.state.time);
+            }
+          } else {
+            localStorage.setItem('bestTime', this.state.time);
+          }
           this.setState({
             guess: '',
             congratulation: true
@@ -9707,6 +9716,13 @@ var App = function (_Component) {
           'Try again'
         )
       );
+      var bestTime = localStorage.getItem('bestTime');
+      var bestTimeComp = bestTime ? _react2.default.createElement(
+        'div',
+        null,
+        'Best time: ',
+        bestTime
+      ) : null;
       return _react2.default.createElement(
         'div',
         null,
@@ -9731,12 +9747,17 @@ var App = function (_Component) {
               },
               'Skip'
             ),
-            this.state.ongoing ? _react2.default.createElement(
+            _react2.default.createElement(
               'div',
-              { className: 'time' },
-              'Time: ',
-              this.state.time
-            ) : null,
+              { className: 'time-container' },
+              this.state.ongoing ? _react2.default.createElement(
+                'div',
+                { className: 'time' },
+                'Current time: ',
+                this.state.time
+              ) : null,
+              bestTimeComp
+            ),
             _react2.default.createElement(
               'button',
               {

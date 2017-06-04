@@ -1,5 +1,5 @@
 * {
-  font: sans-serif;
+  font-family: sans-serif;
   border: none;
   border-image: none;
   border-color: none;
@@ -104,4 +104,13 @@ body {
   justify-content: space-between;
   align-items: center;
   height: 485px;
+}
+
+.time-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 10px 0;
+  align-items: center;
+  justify-content: space-around;
 }

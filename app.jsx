@@ -68,6 +68,15 @@ export default class App extends Component {
       this.removeImage();
       if (this.won()) {
         clearInterval(this.interval);
+        let bestTime = localStorage.getItem('bestTime');
+        if (bestTime) {
+          bestTime = parseInt(bestTime);
+          if (this.state.time < bestTime) {
+            localStorage.setItem('bestTime', this.state.time);
+          }
+        } else {
+          localStorage.setItem('bestTime', this.state.time);
+        }
         this.setState({
           guess: '',
           congratulation: true,
@@ -143,17 +152,22 @@ export default class App extends Component {
         >Try again</button>
       </div>
     );
+    const bestTime = localStorage.getItem('bestTime')
+    const bestTimeComp = bestTime ? (
+      <div>Best time: {bestTime}</div>
+    ) : null;
     return(
       <div>
         <div className="game-container">
-          {this.state.congratulation ? congratulation : (
-            <img
-              src={this.state.images[this.state.current][1]}
-              className="note-img"
-              height="425px"
-              width="475"
-            />
-          )
+          {
+            this.state.congratulation ? congratulation : (
+              <img
+                src={this.state.images[this.state.current][1]}
+                className="note-img"
+                height="425px"
+                width="475"
+              />
+            )
           }
           {this.state.ongoing ? input : start}
           <form className="button-container">
@@ -162,9 +176,12 @@ export default class App extends Component {
               className="game-btn skip"
             >Skip
             </button>
-            {this.state.ongoing ? (
-              <div className="time">Time: {this.state.time}</div>
-            ) : null}
+            <div className="time-container">
+              {this.state.ongoing ? (
+                <div className="time">Current time: {this.state.time}</div>
+              ) : null}
+              {bestTimeComp}
+            </div>
             <button
               onClick={this.handleGuess}
               className="game-btn check"
