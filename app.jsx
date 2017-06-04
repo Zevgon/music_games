@@ -33,6 +33,8 @@ export default class App extends Component {
     this.tick = this.tick.bind(this);
     this.won = this.won.bind(this);
     this.reset = this.reset.bind(this);
+    this.removeImage = this.removeImage.bind(this);
+    this.skip = this.skip.bind(this);
   }
 
   componentDidMount() {
@@ -51,13 +53,19 @@ export default class App extends Component {
   }
 
   won() {
-    return this.state.current === this.state.images.length - 1;
+    return this.state.images.length === 0;
+  }
+
+  removeImage() {
+    this.state.images = this.state.images.slice(0, this.state.current)
+      .concat(this.state.images.slice(this.state.current + 1));
   }
 
   handleGuess(e) {
     if (e) e.preventDefault();
     const curNote = this.state.images[this.state.current][0];
     if (this.state.guess.trim().toUpperCase() === curNote) {
+      this.removeImage();
       if (this.won()) {
         clearInterval(this.interval);
         this.setState({
@@ -67,14 +75,18 @@ export default class App extends Component {
       } else {
         this.setState({
           guess: '',
-          current: this.state.current + 1,
+          current: this.state.current % this.state.images.length,
         });
       }
     }
   }
 
-  handleSkip(e) {
+  skip(e) {
     e.preventDefault();
+    const newIdx = (this.state.current + 1) % this.state.images.length
+    this.setState({
+      current: newIdx,
+    });
   }
 
   reset() {
@@ -83,6 +95,7 @@ export default class App extends Component {
       current: 0,
       ongoing: false,
       time: 0,
+      images: shuffle(this.props.images.slice(0)),
     });
   }
 
@@ -105,7 +118,7 @@ export default class App extends Component {
   }
 
   render() {
-    const input = (
+    const input = this.state.congratulation ? null : (
       <input className="guess"
         placeholder="Enter a guess"
         onChange={this.handleChange}
@@ -133,17 +146,19 @@ export default class App extends Component {
     return(
       <div>
         <div className="game-container">
-          {this.state.congratulation ? congratulation : null}
-          <img
-            src={this.state.images[this.state.current][1]}
-            className="note-img"
-            height="425px"
-            width="475"
-          />
+          {this.state.congratulation ? congratulation : (
+            <img
+              src={this.state.images[this.state.current][1]}
+              className="note-img"
+              height="425px"
+              width="475"
+            />
+          )
+          }
           {this.state.ongoing ? input : start}
           <form className="button-container">
             <button
-              onClick={this.handleSkip}
+              onClick={this.skip}
               className="game-btn skip"
             >Skip
             </button>

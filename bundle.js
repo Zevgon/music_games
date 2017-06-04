@@ -9578,6 +9578,8 @@ var App = function (_Component) {
     _this.tick = _this.tick.bind(_this);
     _this.won = _this.won.bind(_this);
     _this.reset = _this.reset.bind(_this);
+    _this.removeImage = _this.removeImage.bind(_this);
+    _this.skip = _this.skip.bind(_this);
     return _this;
   }
 
@@ -9601,7 +9603,12 @@ var App = function (_Component) {
   }, {
     key: 'won',
     value: function won() {
-      return this.state.current === this.state.images.length - 1;
+      return this.state.images.length === 0;
+    }
+  }, {
+    key: 'removeImage',
+    value: function removeImage() {
+      this.state.images = this.state.images.slice(0, this.state.current).concat(this.state.images.slice(this.state.current + 1));
     }
   }, {
     key: 'handleGuess',
@@ -9609,6 +9616,7 @@ var App = function (_Component) {
       if (e) e.preventDefault();
       var curNote = this.state.images[this.state.current][0];
       if (this.state.guess.trim().toUpperCase() === curNote) {
+        this.removeImage();
         if (this.won()) {
           clearInterval(this.interval);
           this.setState({
@@ -9618,15 +9626,19 @@ var App = function (_Component) {
         } else {
           this.setState({
             guess: '',
-            current: this.state.current + 1
+            current: this.state.current % this.state.images.length
           });
         }
       }
     }
   }, {
-    key: 'handleSkip',
-    value: function handleSkip(e) {
+    key: 'skip',
+    value: function skip(e) {
       e.preventDefault();
+      var newIdx = (this.state.current + 1) % this.state.images.length;
+      this.setState({
+        current: newIdx
+      });
     }
   }, {
     key: 'reset',
@@ -9635,7 +9647,8 @@ var App = function (_Component) {
         congratulation: false,
         current: 0,
         ongoing: false,
-        time: 0
+        time: 0,
+        images: shuffle(this.props.images.slice(0))
       });
     }
   }, {
@@ -9662,7 +9675,7 @@ var App = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      var input = _react2.default.createElement('input', { className: 'guess',
+      var input = this.state.congratulation ? null : _react2.default.createElement('input', { className: 'guess',
         placeholder: 'Enter a guess',
         onChange: this.handleChange,
         value: this.state.guess
@@ -9700,8 +9713,7 @@ var App = function (_Component) {
         _react2.default.createElement(
           'div',
           { className: 'game-container' },
-          this.state.congratulation ? congratulation : null,
-          _react2.default.createElement('img', {
+          this.state.congratulation ? congratulation : _react2.default.createElement('img', {
             src: this.state.images[this.state.current][1],
             className: 'note-img',
             height: '425px',
@@ -9714,7 +9726,7 @@ var App = function (_Component) {
             _react2.default.createElement(
               'button',
               {
-                onClick: this.handleSkip,
+                onClick: this.skip,
                 className: 'game-btn skip'
               },
               'Skip'

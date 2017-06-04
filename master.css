@@ -79,8 +79,6 @@ body {
 }
 
 .congratulation {
-  position: absolute;
-  z-index: 2;
   top: 40%;
   transform: translateY(-50%);
   background-color: rgb(118, 222, 96);
@@ -98,4 +96,12 @@ body {
 .start {
   background-color: #28b928;
   color: white;
+}
+
+.img-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 485px;
 }
