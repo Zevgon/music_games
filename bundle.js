@@ -9639,6 +9639,7 @@ var App = function (_Component) {
             newBest = localStorage.getItem('bestTime');
           }
           var medal = this.getMedal(newBest);
+          localStorage.setItem('medal', medal);
           this.setState({
             guess: '',
             congratulation: true,
@@ -9753,12 +9754,16 @@ var App = function (_Component) {
         bestTime
       ) : null;
       window.MEDALS = _medals.MEDALS;
-      var medal = this.state.medal ? _react2.default.createElement('img', {
-        className: 'medal',
-        src: _medals.MEDALS[this.state.medal].img,
-        width: '200px',
-        height: '200px'
-      }) : null;
+      var medal = this.state.medal ? _react2.default.createElement(
+        'div',
+        { className: 'medal-container' },
+        _react2.default.createElement('img', {
+          className: 'medal',
+          src: _medals.MEDALS[this.state.medal].img,
+          width: '200px',
+          height: '200px'
+        })
+      ) : null;
       return _react2.default.createElement(
         'div',
         { className: 'game-container' },

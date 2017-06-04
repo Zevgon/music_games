@@ -85,6 +85,7 @@ export default class App extends Component {
           newBest = localStorage.getItem('bestTime');
         }
         const medal = this.getMedal(newBest);
+        localStorage.setItem('medal', medal);
         this.setState({
           guess: '',
           congratulation: true,
@@ -179,12 +180,14 @@ export default class App extends Component {
     ) : null;
     window.MEDALS = MEDALS;
     const medal = this.state.medal ? (
-      <img
-        className="medal"
-        src={MEDALS[this.state.medal].img}
-        width="200px"
-        height="200px"
-      />
+      <div className="medal-container">
+        <img
+          className="medal"
+          src={MEDALS[this.state.medal].img}
+          width="200px"
+          height="200px"
+          />
+      </div>
     ) : null;
     return(
       <div className="game-container">
