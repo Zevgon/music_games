@@ -14,7 +14,7 @@ body {
   background-color: rgb(233, 233, 233);
 }
 
-.game-container {
+.play-area {
   background-color: rgb(240, 240, 240);
   border-radius: 10px;
   box-shadow: 10px 10px 5px #ccc;
@@ -24,7 +24,6 @@ body {
   align-items: center;
   height: 589px;
   width: 656px;
-  margin: 50px auto;
 }
 
 .guess-container {
@@ -113,4 +112,16 @@ body {
   padding: 10px 0;
   align-items: center;
   justify-content: space-around;
+}
+
+.game-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin: 50px auto;
+}
+
+.medal {
+  margin-top: 30px;
 }

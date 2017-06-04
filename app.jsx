@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { MEDALS } from './medals';
 
 const shuffle = a => {
   let j, x, i;
@@ -26,7 +27,11 @@ export default class App extends Component {
       ongoing: false,
       time: 0,
       congratulation: false,
+      medal: localStorage.getItem('medal'),
     }
+
+    this.numImages = images.length;
+
     this.handleChange = this.handleChange.bind(this);
     this.handleGuess = this.handleGuess.bind(this);
     this.start = this.start.bind(this);
@@ -68,18 +73,22 @@ export default class App extends Component {
       this.removeImage();
       if (this.won()) {
         clearInterval(this.interval);
-        let bestTime = localStorage.getItem('bestTime');
+        const bestTime = localStorage.getItem('bestTime');
+        let newBest;
         if (bestTime) {
-          bestTime = parseInt(bestTime);
-          if (this.state.time < bestTime) {
+          if (this.state.time < parseInt(bestTime)) {
             localStorage.setItem('bestTime', this.state.time);
+            newBest = localStorage.getItem('bestTime');
           }
         } else {
           localStorage.setItem('bestTime', this.state.time);
+          newBest = localStorage.getItem('bestTime');
         }
+        const medal = this.getMedal(newBest);
         this.setState({
           guess: '',
           congratulation: true,
+          medal
         });
       } else {
         this.setState({
@@ -88,6 +97,18 @@ export default class App extends Component {
         });
       }
     }
+  }
+
+  getMedal(time) {
+    if (!time) return this.state.medal;
+    let ret;
+    const ratio = this.state.time / this.numImages;
+    Object.entries(MEDALS).forEach(([medalName, medal]) => {
+      if (ratio < medal.secondsPerAnswer) {
+        ret = medalName;
+      }
+    });
+    return ret;
   }
 
   skip(e) {
@@ -156,9 +177,18 @@ export default class App extends Component {
     const bestTimeComp = bestTime ? (
       <div>Best time: {bestTime}</div>
     ) : null;
+    window.MEDALS = MEDALS;
+    const medal = this.state.medal ? (
+      <img
+        className="medal"
+        src={MEDALS[this.state.medal].img}
+        width="200px"
+        height="200px"
+      />
+    ) : null;
     return(
-      <div>
-        <div className="game-container">
+      <div className="game-container">
+        <div className="play-area">
           {
             this.state.congratulation ? congratulation : (
               <img
@@ -189,6 +219,7 @@ export default class App extends Component {
             </button>
           </form>
         </div>
+        {medal}
       </div>
     );
   }
