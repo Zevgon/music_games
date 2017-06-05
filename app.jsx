@@ -193,7 +193,7 @@ export default class App extends Component {
         }
         {
           this.state.medal === 'gold' ? (
-            <div>Congratulations: Highest medal achieved :D</div>
+            <div>Congratulations! Highest medal achieved :D</div>
           ) : (
             <div>Next medal at: {MEDALS[nextMedal].secondsPerAnswer * this.numImages} seconds</div>
           )
