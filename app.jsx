@@ -178,17 +178,28 @@ export default class App extends Component {
     const bestTimeComp = bestTime ? (
       <div>Best time: {bestTime}</div>
     ) : null;
-    window.MEDALS = MEDALS;
-    const medal = this.state.medal ? (
+    const nextMedal = MEDALS.getNext(this.state.medal);
+    const medal = (
       <div className="medal-container">
-        <img
-          className="medal"
-          src={MEDALS[this.state.medal].img}
-          width="200px"
-          height="200px"
-          />
+        {
+          this.state.medal ? (
+          <img
+            className="medal"
+            src={MEDALS[this.state.medal].img}
+            width="200px"
+            height="200px"
+            />
+          ) : null
+        }
+        {
+          this.state.medal === 'gold' ? (
+            <div>Congratulations: Highest medal achieved :D</div>
+          ) : (
+            <div>Next medal at: {MEDALS[nextMedal].secondsPerAnswer * this.numImages} seconds</div>
+          )
+        }
       </div>
-    ) : null;
+      );
     return(
       <div className="game-container">
         <div className="play-area">

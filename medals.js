@@ -11,4 +11,18 @@ export const MEDALS = {
     secondsPerAnswer: 1.5,
     img: './medal_images/gold_medal.png',
   },
+  getNext: cur => {
+    switch (cur) {
+      case null:
+        return 'bronze';
+      case 'bronze':
+        return 'silver';
+      case 'silver':
+        return 'gold';
+      case 'gold':
+        return null;
+      default:
+        throw 'Invalid current medal specified';
+    }
+  },
 }

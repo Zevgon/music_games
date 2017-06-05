@@ -9753,17 +9753,28 @@ var App = function (_Component) {
         'Best time: ',
         bestTime
       ) : null;
-      window.MEDALS = _medals.MEDALS;
-      var medal = this.state.medal ? _react2.default.createElement(
+      var nextMedal = _medals.MEDALS.getNext(this.state.medal);
+      var medal = _react2.default.createElement(
         'div',
         { className: 'medal-container' },
-        _react2.default.createElement('img', {
+        this.state.medal ? _react2.default.createElement('img', {
           className: 'medal',
           src: _medals.MEDALS[this.state.medal].img,
           width: '200px',
           height: '200px'
-        })
-      ) : null;
+        }) : null,
+        this.state.medal === 'gold' ? _react2.default.createElement(
+          'div',
+          null,
+          'Congratulations: Highest medal achieved :D'
+        ) : _react2.default.createElement(
+          'div',
+          null,
+          'Next medal at: ',
+          _medals.MEDALS[nextMedal].secondsPerAnswer * this.numImages,
+          ' seconds'
+        )
+      );
       return _react2.default.createElement(
         'div',
         { className: 'game-container' },
@@ -9907,6 +9918,20 @@ var MEDALS = exports.MEDALS = {
   gold: {
     secondsPerAnswer: 1.5,
     img: './medal_images/gold_medal.png'
+  },
+  getNext: function getNext(cur) {
+    switch (cur) {
+      case null:
+        return 'bronze';
+      case 'bronze':
+        return 'silver';
+      case 'silver':
+        return 'gold';
+      case 'gold':
+        return null;
+      default:
+        throw 'Invalid current medal specified';
+    }
   }
 };
 
